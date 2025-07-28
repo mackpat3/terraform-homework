@@ -1,54 +1,51 @@
 
 #VPC
 resource "aws_vpc" "main" {
-  cidr_block = "10.0.0.0/16"
-  tags = {
-    Name = "kaizen"
-  }
+  cidr_block = var.vpc[0].cidr
+  enable_dns_hostnames = var.vpc[0].dns_hostnames
+  enable_dns_support = var.vpc[0].dns_support
+
+  tags = local.common_tags
 }
 
 #Subnets
 resource "aws_subnet" "public1" {
   vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.1.0/24"
-  availability_zone = "us-west-2a"
-  map_public_ip_on_launch = true
-
+  cidr_block = var.subnet[0].cidr
+  availability_zone = var.subnet[0].az
+  map_public_ip_on_launch = var.subnet[0].get_public_ip
   tags = {
-    Name = "public1"
+    name = var.subnet[0].name
   }
 }
 
 resource "aws_subnet" "public2" {
   vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.2.0/24"
-  availability_zone = "us-west-2b"
-  map_public_ip_on_launch = true
-
+  cidr_block = var.subnet[1].cidr
+  availability_zone = var.subnet[1].az
+  map_public_ip_on_launch = var.subnet[1].get_public_ip
   tags = {
-    Name = "public2"
+    name = var.subnet[1].name
   }
 }
 
 resource "aws_subnet" "private1" {
   vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.3.0/24"
-  availability_zone = "us-west-2c"
-  map_public_ip_on_launch = false
-
+  cidr_block = var.subnet[2].cidr
+  availability_zone = var.subnet[2].az
+  map_public_ip_on_launch = var.subnet[2].get_public_ip
   tags = {
-    Name = "private1"
+    name = var.subnet[2].name
   }
 }
 
 resource "aws_subnet" "private2" {
   vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.4.0/24"
-  availability_zone = "us-west-2d"
-  map_public_ip_on_launch = false
-
+  cidr_block = var.subnet[3].cidr
+  availability_zone = var.subnet[3].az
+  map_public_ip_on_launch = var.subnet[3].get_public_ip
   tags = {
-    Name = "private2"
+    name = var.subnet[3].name
   }
 }
 
@@ -56,35 +53,22 @@ resource "aws_subnet" "private2" {
 resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.main.id
 
-  tags = {
-    Name = "homework3_igw"
-  }
+  tags = local.common_tags
 }
-
 #Route Tables
-resource "aws_route_table" "example" {
+resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.gw.id
-  }
-
   tags = {
-    Name = "public-rt"
+    Name = var.route_tables[0]
   }
 }
 
-resource "aws_route_table" "example2" {
+resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
 
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.gw.id
-  }
-
   tags = {
-    Name = "private-rt"
+    Name = var.route_tables[1]
   }
 }
 

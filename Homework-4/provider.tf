@@ -9,12 +9,11 @@ terraform {
 
 # Configure the AWS Provider
 provider "aws" {
-  region = var.region
+  region = "us-west-2"
 }
 
 resource "aws_key_pair" "deployer" {
-  key_name   = var.key_name
+  key_name   = "Bastion-Key"
   public_key = file("~/.ssh/id_rsa.pub")
   tags = local.common_tags
-  }
-
+}

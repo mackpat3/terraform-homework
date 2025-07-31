@@ -1,3 +1,4 @@
+```hcl
 # terraform-homework
 
 region = "us-west-2"

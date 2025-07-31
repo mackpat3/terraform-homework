@@ -1,18 +1,20 @@
 variable region {
-    description = "Choose AWS region"
-    default = ""
-    type = string
+  type = string
+  description = "Provide region"
 }
 
-variable key_name{
-    description = "Provide key name"
-    default = ""
-    type = string
+variable key_name {
+  type = string 
+  description = "Provide key name"
 }
 
 variable port {
   type = list(number)
   description = "Provide port"
+}
+
+variable ec2_web {
+  type = map(string)
 }
 
 variable vpc {
@@ -23,8 +25,8 @@ variable vpc {
   })
   default = {
     cidr = ""
-    dns_support = false
-    dns_hostnames = false
+    dns_support = true
+    dns_hostnames = true
   }
 }
 
@@ -32,57 +34,43 @@ variable subnet {
   type = list(object({
     cidr = string
     az = string
-    get_public_ip = bool 
+    map_public_ip_on_launch = bool 
     name = string}))
 
   default = [
     {
     cidr = ""
     az = ""
-    get_public_ip = true
+    map_public_ip_on_launch = true
     name = ""
   },
     {
     cidr = ""
     az = ""
-    get_public_ip = true
+    map_public_ip_on_launch = true
     name = ""
   },
     {
     cidr = ""
     az = ""
-    get_public_ip = false
+    map_public_ip_on_launch = false
     name = ""
   },
-  {
+    {
     cidr = ""
     az = ""
-    get_public_ip = false
+    map_public_ip_on_launch = false
     name = ""
   }
   ]
 }
 
-variable igw_name{
-    description = "Provide IGW name"
-    default = ""
+variable igw {
     type = string
+    default = ""
 }
 
 variable route_table {
-   description = "Input names for route tables"
-   type        = list(string)
-   default     = null
-   nullable    = true
-}
-
-
-variable ec2_web {
-  type = map(string)
-  default = {
-      ami_id_1 = ""
-      instance_type1 = ""
-      ami_id_2 = ""
-      instance_type2 = ""
-  }
+  type = list(string)
+  default = []
 }
